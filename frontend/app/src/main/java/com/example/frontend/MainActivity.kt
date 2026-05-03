@@ -17,7 +17,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -35,6 +34,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.frontend.ui.login.LoginScreen
+import com.example.frontend.ui.register.RegisterScreen
 import com.example.frontend.ui.theme.BrightOrange
 import com.example.frontend.ui.theme.FrontendTheme
 
@@ -72,10 +73,10 @@ fun MyNavigation(isDarkMode: Boolean, onToggleTheme: ()-> Unit){
 
     NavHost(navController = navController, startDestination = Screen.Login.route) {
         composable(Screen.Login.route) {
-            PlaceholderScreen("Login", Screen.Register.route, navController, isDarkMode, onToggleTheme)
+            LoginScreen(navController, {navController.navigate(Screen.Register.route)})
         }
         composable(Screen.Register.route) {
-            PlaceholderScreen("Register", Screen.Home.route, navController, isDarkMode, onToggleTheme)
+            RegisterScreen(navController)
         }
         composable(Screen.Home.route) {
             PlaceholderScreen("Home (Movie List)", Screen.Details.createRoute("1"), navController, isDarkMode, onToggleTheme)
