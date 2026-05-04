@@ -1,13 +1,12 @@
-package com.example.frontend.ui.movie_list
+package com.example.frontend.ui.rated_movies
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -31,21 +30,20 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.frontend.Screen
-import com.example.frontend.ui.components.MovieGridItem
+import com.example.frontend.ui.components.MovieListItem
 import com.example.frontend.ui.data.MovieRepo
 import com.example.frontend.ui.theme.FrontendTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MovieListScreen(navController: NavController) {
+fun RatedMoviesScreen(navController: NavController) {
     var searchQuery by remember { mutableStateOf("") }
-
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        "MOVIES",
+                        "RATED MOVIES",
                         color = MaterialTheme.colorScheme.primary,
                         style = MaterialTheme.typography.titleLarge
                     )
@@ -75,14 +73,12 @@ fun MovieListScreen(navController: NavController) {
                 shape = RoundedCornerShape(12.dp),
                 colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = MaterialTheme.colorScheme.primary)
             )
-
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(3),
+            LazyColumn (
                 contentPadding = PaddingValues(8.dp),
                 modifier = Modifier.fillMaxSize()
             ) {
                 items(MovieRepo.dummyMovies) { movie ->
-                    MovieGridItem(movie) {
+                    MovieListItem(movie) {
                         navController.navigate(Screen.Details.createRoute(movie.id))
                     }
                 }
@@ -96,6 +92,6 @@ fun MovieListScreen(navController: NavController) {
 fun DefaultPreview() {
     FrontendTheme {
         val navController = rememberNavController()
-        MovieListScreen(navController)
+        RatedMoviesScreen(navController)
     }
 }

@@ -10,7 +10,7 @@ val SurfaceGrey = Color(0xFF1E1E1E)
 val TextWhite = Color(0xFFFFE7D9)
 
 // LIGHT THEME
-val DarkOrange = Color(0xFF963B16)
+val DarkOrange = Color(0xFFBE501D)
 val TextGrey = Color(0xFF9E9E9E)
-val WhiteOrange = Color(0xFFFFEBE6)
-val SurfaceOrange = Color(0xFFF3BFAC)
+val WhiteOrange = Color(0xFFFFFCFB)
+val SurfaceOrange = Color(0xFFE3BEAE)
