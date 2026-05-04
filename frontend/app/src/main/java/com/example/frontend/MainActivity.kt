@@ -35,6 +35,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.frontend.ui.login.LoginScreen
+import com.example.frontend.ui.movie_list.MovieListScreen
 import com.example.frontend.ui.register.RegisterScreen
 import com.example.frontend.ui.theme.BrightOrange
 import com.example.frontend.ui.theme.FrontendTheme
@@ -79,7 +80,7 @@ fun MyNavigation(isDarkMode: Boolean, onToggleTheme: ()-> Unit){
             RegisterScreen(navController)
         }
         composable(Screen.Home.route) {
-            PlaceholderScreen("Home (Movie List)", Screen.Details.createRoute("1"), navController, isDarkMode, onToggleTheme)
+            MovieListScreen(navController)
         }
         composable(Screen.Details.route) { backStackEntry ->
             val movieId = backStackEntry.arguments?.getString("movieId")
@@ -103,7 +104,7 @@ fun PlaceholderScreen(
     nextRoute: String,
     navController: NavController,
     isDarkMode: Boolean,
-    OnToggleTheme: () -> Unit
+    onToggleTheme: () -> Unit
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -122,7 +123,7 @@ fun PlaceholderScreen(
                 Spacer(modifier = Modifier.width(8.dp))
                 Switch(
                     checked = isDarkMode,
-                    onCheckedChange = { OnToggleTheme() },
+                    onCheckedChange = { onToggleTheme() },
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = BrightOrange,
                         checkedTrackColor = BrightOrange.copy(alpha = 0.5f)
@@ -151,7 +152,7 @@ fun PlaceholderScreen(
                     contentColor = Color.Black
                 )
             ) {
-                Text("Idi na sledeći ekran")
+                Text("Go to next screen")
             }
         }
     }
