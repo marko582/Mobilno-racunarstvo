@@ -4,41 +4,31 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.frontend.ui.components.NavBar
 import com.example.frontend.ui.login.LoginScreen
 import com.example.frontend.ui.movie_details.MovieDetailsScreen
 import com.example.frontend.ui.movie_list.MovieListScreen
+import com.example.frontend.ui.navigation.MyNavigation
+import com.example.frontend.ui.profile.ProfileScreen
+import com.example.frontend.ui.rated_movies.RatedMoviesScreen
 import com.example.frontend.ui.register.RegisterScreen
 import com.example.frontend.ui.theme.FrontendTheme
+import com.example.frontend.ui.watchlist.WatchlistScreen
 
 sealed class Screen(val route: String){
     object Login : Screen("login")
@@ -59,7 +49,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             var isDarkMode by remember { mutableStateOf(true) }
             FrontendTheme (darkTheme = isDarkMode) {
-                MyNavigation(
+                MainLayout(
                     isDarkMode = isDarkMode,
                     onToggleTheme = {isDarkMode = !isDarkMode}
                 )
@@ -69,99 +59,38 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MyNavigation(isDarkMode: Boolean, onToggleTheme: ()-> Unit){
+fun MainLayout(isDarkMode: Boolean, onToggleTheme: () -> Unit) {
     val navController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
-    NavHost(navController = navController, startDestination = Screen.Login.route) {
-        composable(Screen.Login.route) {
-            LoginScreen(navController, {navController.navigate(Screen.Register.route)})
-        }
-        composable(Screen.Register.route) {
-            RegisterScreen(navController)
-        }
-        composable(Screen.Home.route) {
-            MovieListScreen(navController)
-        }
-        composable(Screen.Details.route) { backStackEntry ->
-            val movieId = backStackEntry.arguments?.getString("1")
-            MovieDetailsScreen(movieId, navController)
-        }
-        composable(Screen.Rated.route) {
-            PlaceholderScreen("Rated Movies", Screen.Watchlist.route, navController, isDarkMode, onToggleTheme)
-        }
-        composable(Screen.Watchlist.route) {
-            PlaceholderScreen("Watchlist", Screen.Profile.route, navController, isDarkMode, onToggleTheme)
-        }
-        composable (Screen.Profile.route){
-            PlaceholderScreen("Profile", Screen.Login.route, navController, isDarkMode, onToggleTheme)
-        }
-    }
-}
+    val noBottomBarRoutes = listOf(Screen.Login.route, Screen.Register.route)
 
-@Composable
-fun PlaceholderScreen(
-    name: String,
-    nextRoute: String,
-    navController: NavController,
-    isDarkMode: Boolean,
-    onToggleTheme: () -> Unit
-) {
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 40.dp, start = 16.dp, end = 16.dp),
-                horizontalArrangement = Arrangement.End
-            ) {
-                Text(
-                    text = if (isDarkMode) "Dark" else "Light",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Switch(
-                    checked = isDarkMode,
-                    onCheckedChange = { onToggleTheme() },
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = MaterialTheme.colorScheme.primary,
-                        checkedTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
-                    )
-                )
+        bottomBar = {
+            if (currentRoute !in noBottomBarRoutes) {
+                NavBar(navController)
             }
-        }
+        },
+        containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = name,
-                color = MaterialTheme.colorScheme.primary,
-                style = MaterialTheme.typography.headlineLarge
+        Box(modifier = Modifier.padding(innerPadding)) {
+            MyNavigation(
+                navController = navController,
+                isDarkMode = isDarkMode,
+                onToggleTheme = onToggleTheme
             )
-            Spacer(modifier = Modifier.height(24.dp))
-            Button(
-                onClick = { navController.navigate(nextRoute) },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = Color.Black
-                )
-            ) {
-                Text("Go to next screen")
-            }
         }
     }
 }
+
+
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun DefaultPreview() {
     FrontendTheme {
         val navController = rememberNavController()
-        PlaceholderScreen("Preview Mode", "home", navController, true, { } )
+        MainLayout(true, {})
     }
 }
