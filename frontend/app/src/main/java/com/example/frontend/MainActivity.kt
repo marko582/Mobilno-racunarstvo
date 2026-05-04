@@ -35,9 +35,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.frontend.ui.login.LoginScreen
+import com.example.frontend.ui.movie_details.MovieDetailsScreen
 import com.example.frontend.ui.movie_list.MovieListScreen
 import com.example.frontend.ui.register.RegisterScreen
-import com.example.frontend.ui.theme.BrightOrange
 import com.example.frontend.ui.theme.FrontendTheme
 
 sealed class Screen(val route: String){
@@ -83,8 +83,8 @@ fun MyNavigation(isDarkMode: Boolean, onToggleTheme: ()-> Unit){
             MovieListScreen(navController)
         }
         composable(Screen.Details.route) { backStackEntry ->
-            val movieId = backStackEntry.arguments?.getString("movieId")
-            PlaceholderScreen("Details for Movie $movieId", Screen.Rated.route, navController, isDarkMode, onToggleTheme)
+            val movieId = backStackEntry.arguments?.getString("1")
+            MovieDetailsScreen(movieId, navController)
         }
         composable(Screen.Rated.route) {
             PlaceholderScreen("Rated Movies", Screen.Watchlist.route, navController, isDarkMode, onToggleTheme)
@@ -125,8 +125,8 @@ fun PlaceholderScreen(
                     checked = isDarkMode,
                     onCheckedChange = { onToggleTheme() },
                     colors = SwitchDefaults.colors(
-                        checkedThumbColor = BrightOrange,
-                        checkedTrackColor = BrightOrange.copy(alpha = 0.5f)
+                        checkedThumbColor = MaterialTheme.colorScheme.primary,
+                        checkedTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
                     )
                 )
             }
@@ -141,14 +141,14 @@ fun PlaceholderScreen(
         ) {
             Text(
                 text = name,
-                color = BrightOrange,
+                color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.headlineLarge
             )
             Spacer(modifier = Modifier.height(24.dp))
             Button(
                 onClick = { navController.navigate(nextRoute) },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = BrightOrange,
+                    containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = Color.Black
                 )
             ) {

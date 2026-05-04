@@ -36,7 +36,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.frontend.Screen
-import com.example.frontend.ui.theme.BrightOrange
+import com.example.frontend.ui.data.Movie
+import com.example.frontend.ui.data.MovieRepo
 import com.example.frontend.ui.theme.FrontendTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,7 +50,7 @@ fun MovieListScreen(navController: NavController)
         topBar = {
             TopAppBar(
                 title = {
-                    Text("MOVIES", color = BrightOrange, style = MaterialTheme.typography.titleLarge)
+                    Text("MOVIES", color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.titleLarge)
                 },
                 actions = {
                     //TODO
@@ -67,9 +68,9 @@ fun MovieListScreen(navController: NavController)
                     .fillMaxWidth()
                     .padding(16.dp),
                 placeholder = { Text("Search for a movie...") },
-                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = BrightOrange) },
+                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
                 shape = RoundedCornerShape(12.dp),
-                colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = BrightOrange)
+                colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = MaterialTheme.colorScheme.primary)
             )
 
             LazyVerticalGrid(
@@ -77,7 +78,7 @@ fun MovieListScreen(navController: NavController)
                 contentPadding = PaddingValues(8.dp),
                 modifier = Modifier.fillMaxSize()
             ) {
-                items(dummyMovies) { movie ->
+                items(MovieRepo.dummyMovies) { movie ->
                     MovieItem(movie) {
                         navController.navigate(Screen.Details.createRoute(movie.id))
                     }

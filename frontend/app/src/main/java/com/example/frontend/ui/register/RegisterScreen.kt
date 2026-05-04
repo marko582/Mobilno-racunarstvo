@@ -14,7 +14,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,8 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.frontend.Screen
-import com.example.frontend.ui.login.LoginScreen
-import com.example.frontend.ui.theme.BrightOrange
 import com.example.frontend.ui.theme.FrontendTheme
 
 @Composable
@@ -54,7 +51,7 @@ fun RegisterScreen(navController: NavController)
             Text(
                 text = "MOVIE APP",
                 style = MaterialTheme.typography.displayMedium,
-                color = BrightOrange,
+                color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(bottom = 32.dp)
             )
 
@@ -65,10 +62,10 @@ fun RegisterScreen(navController: NavController)
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = BrightOrange,
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
                     unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
-                    focusedLabelColor = BrightOrange,
-                    cursorColor = BrightOrange
+                    focusedLabelColor = MaterialTheme.colorScheme.primary,
+                    cursorColor = MaterialTheme.colorScheme.primary
                 )
             )
 
@@ -81,10 +78,10 @@ fun RegisterScreen(navController: NavController)
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = BrightOrange,
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
                     unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
-                    focusedLabelColor = BrightOrange,
-                    cursorColor = BrightOrange
+                    focusedLabelColor = MaterialTheme.colorScheme.primary,
+                    cursorColor = MaterialTheme.colorScheme.primary
                 )
             )
 
@@ -97,10 +94,10 @@ fun RegisterScreen(navController: NavController)
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = BrightOrange,
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
                     unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
-                    focusedLabelColor = BrightOrange,
-                    cursorColor = BrightOrange
+                    focusedLabelColor = MaterialTheme.colorScheme.primary,
+                    cursorColor = MaterialTheme.colorScheme.primary
                 )
             )
 
@@ -113,10 +110,10 @@ fun RegisterScreen(navController: NavController)
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = BrightOrange,
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
                     unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
-                    focusedLabelColor = BrightOrange,
-                    cursorColor = BrightOrange
+                    focusedLabelColor = MaterialTheme.colorScheme.primary,
+                    cursorColor = MaterialTheme.colorScheme.primary
                 )
             )
 
@@ -127,9 +124,9 @@ fun RegisterScreen(navController: NavController)
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = BrightOrange)
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
-                Text("Sign Up", color = Color.Black, style = MaterialTheme.typography.titleMedium)
+                Text("Sign Up", color = MaterialTheme.colorScheme.onPrimary, style = MaterialTheme.typography.titleMedium)
             }
 
             Spacer(modifier = Modifier.height(32.dp))
