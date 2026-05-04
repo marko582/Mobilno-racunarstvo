@@ -1,6 +1,5 @@
 package com.example.frontend.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -24,8 +23,10 @@ private val DarkColorScheme = darkColorScheme(
 
 private val LightColorScheme = lightColorScheme(
     primary = BrightOrange,
-    background = Color.White,
-    surface = Color(0xFFF5F5F5),
+    secondary = DarkOrange,
+    background = WhiteOrange,
+    surface = SurfaceOrange,
+    onPrimary = Color.Black,
     onBackground = Color.Black,
     onSurface = Color.Black
 )
@@ -33,7 +34,7 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun FrontendTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -41,7 +42,6 @@ fun FrontendTheme(
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
-
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }

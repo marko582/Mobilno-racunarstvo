@@ -22,13 +22,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.frontend.Screen
-import com.example.frontend.ui.theme.BrightOrange
 import com.example.frontend.ui.theme.FrontendTheme
 
 @Composable
@@ -51,7 +49,7 @@ fun LoginScreen(navController: NavController, onRegisterClick: ()-> Unit)
             Text(
                 text = "MOVIE APP",
                 style = MaterialTheme.typography.displayMedium,
-                color = BrightOrange,
+                color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(bottom = 32.dp)
             )
 
@@ -62,16 +60,15 @@ fun LoginScreen(navController: NavController, onRegisterClick: ()-> Unit)
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = BrightOrange,
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
                     unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
-                    focusedLabelColor = BrightOrange,
-                    cursorColor = BrightOrange
+                    focusedLabelColor = MaterialTheme.colorScheme.primary,
+                    cursorColor = MaterialTheme.colorScheme.primary
                 )
             )
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Password Polje
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
@@ -79,10 +76,10 @@ fun LoginScreen(navController: NavController, onRegisterClick: ()-> Unit)
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = BrightOrange,
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
                     unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
-                    focusedLabelColor = BrightOrange,
-                    cursorColor = BrightOrange
+                    focusedLabelColor = MaterialTheme.colorScheme.primary,
+                    cursorColor = MaterialTheme.colorScheme.primary
                 )
             )
 
@@ -93,9 +90,9 @@ fun LoginScreen(navController: NavController, onRegisterClick: ()-> Unit)
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = BrightOrange)
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
-                Text("Sign In", color = Color.Black, style = MaterialTheme.typography.titleMedium)
+                Text("Sign In", color = MaterialTheme.colorScheme.onPrimary, style = MaterialTheme.typography.titleMedium)
             }
 
             Spacer(modifier = Modifier.height(32.dp))
