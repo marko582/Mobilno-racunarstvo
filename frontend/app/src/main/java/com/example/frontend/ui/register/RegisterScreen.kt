@@ -30,13 +30,16 @@ import com.example.frontend.Screen
 import com.example.frontend.ui.theme.FrontendTheme
 
 @Composable
-fun RegisterScreen(navController: NavController)
+fun RegisterScreen(
+    state: RegisterUiState,
+    onUsernameChange: (String) -> Unit,
+    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onConfirmPasswordChange: (String) -> Unit,
+    onRegisterClick: () -> Unit,
+    onBackToLogin: () -> Unit
+)
 {
-    var username by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var passwordConfirm by remember { mutableStateOf("") }
-
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
@@ -56,8 +59,8 @@ fun RegisterScreen(navController: NavController)
             )
 
             OutlinedTextField(
-                value = username,
-                onValueChange = { username = it },
+                value = state.username,
+                onValueChange = onUsernameChange,
                 label = {Text("Username")},
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
@@ -66,14 +69,15 @@ fun RegisterScreen(navController: NavController)
                     unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
                     focusedLabelColor = MaterialTheme.colorScheme.primary,
                     cursorColor = MaterialTheme.colorScheme.primary
-                )
+                ),
+                enabled = !state.isLoading
             )
 
             Spacer(modifier = Modifier.height(32.dp))
 
             OutlinedTextField(
-                value = email,
-                onValueChange = { email = it },
+                value = state.email,
+                onValueChange = onEmailChange,
                 label = {Text("Email")},
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
@@ -82,14 +86,15 @@ fun RegisterScreen(navController: NavController)
                     unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
                     focusedLabelColor = MaterialTheme.colorScheme.primary,
                     cursorColor = MaterialTheme.colorScheme.primary
-                )
+                ),
+                enabled = !state.isLoading
             )
 
             Spacer(modifier = Modifier.height(32.dp))
 
             OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
+                value = state.password,
+                onValueChange = onPasswordChange,
                 label = { Text("Password") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
@@ -98,14 +103,15 @@ fun RegisterScreen(navController: NavController)
                     unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
                     focusedLabelColor = MaterialTheme.colorScheme.primary,
                     cursorColor = MaterialTheme.colorScheme.primary
-                )
+                ),
+                enabled = !state.isLoading
             )
 
             Spacer(modifier = Modifier.height(32.dp))
 
             OutlinedTextField(
-                value = passwordConfirm,
-                onValueChange = { passwordConfirm = it },
+                value = state.confirmPassword,
+                onValueChange = onConfirmPasswordChange,
                 label = { Text("Confirm Password") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
@@ -114,13 +120,19 @@ fun RegisterScreen(navController: NavController)
                     unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
                     focusedLabelColor = MaterialTheme.colorScheme.primary,
                     cursorColor = MaterialTheme.colorScheme.primary
-                )
+                ),
+                enabled = !state.isLoading
             )
+
+            state.error?.let {
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(text = it, color = Color.Red, modifier = Modifier.padding(8.dp))
+            }
 
             Spacer(modifier = Modifier.height(32.dp))
 
             Button(
-                onClick = { navController.navigate(Screen.Login.route) },
+                onClick = onRegisterClick,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
@@ -141,6 +153,6 @@ fun RegisterScreen(navController: NavController)
 fun DefaultPreview() {
     FrontendTheme {
         val navController = rememberNavController()
-        RegisterScreen(navController)
+        RegisterScreen(RegisterUiState(), {},{}, {},{},{}, {})
     }
 }

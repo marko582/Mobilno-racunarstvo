@@ -40,7 +40,12 @@ import com.example.frontend.Screen
 import com.example.frontend.ui.theme.FrontendTheme
 
 @Composable
-fun ProfileScreen(navController: NavController, isDarkMode: Boolean, onToggleTheme: ()-> Unit) {
+fun ProfileScreen(
+    state: ProfileUiState,
+    onToggleTheme: () -> Unit,
+    onLogoutClick: () -> Unit,
+    onSettingsClick: () -> Unit = {},
+) {
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
@@ -51,6 +56,7 @@ fun ProfileScreen(navController: NavController, isDarkMode: Boolean, onToggleThe
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // AVATAR SECTION
             Surface(
                 modifier = Modifier.size(120.dp),
                 shape = CircleShape,
@@ -67,31 +73,33 @@ fun ProfileScreen(navController: NavController, isDarkMode: Boolean, onToggleThe
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Mile Dizna",
+                text = state.username,
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.Bold
             )
 
             Text(
-                text = "Member since: May 1977",
+                text = "Member since: ${state.memberSince}",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
             )
 
             Spacer(modifier = Modifier.height(32.dp))
 
+            // STATS
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                StatItem("Movies", "124")
-                StatItem("Lists", "45")
-                StatItem("Ratings", "89")
+                StatItem("Movies", state.moviesCount)
+                StatItem("Watchlist", state.watchlistCount)
+                StatItem("Ratings", state.ratingsCount)
             }
 
             Spacer(modifier = Modifier.height(40.dp))
 
+            // DARK MODE TOGGLE
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
@@ -100,12 +108,13 @@ fun ProfileScreen(navController: NavController, isDarkMode: Boolean, onToggleThe
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = if (isDarkMode) "Dark Mode" else "Light Mode",
-                    style = MaterialTheme.typography.bodyMedium
+                    text = if (state.isDarkMode) "Dark Mode" else "Light Mode",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
-                Spacer(modifier = Modifier.width(8.dp))
+                Spacer(modifier = Modifier.width(12.dp))
                 Switch(
-                    checked = isDarkMode,
+                    checked = state.isDarkMode,
                     onCheckedChange = { onToggleTheme() },
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = MaterialTheme.colorScheme.primary,
@@ -116,14 +125,10 @@ fun ProfileScreen(navController: NavController, isDarkMode: Boolean, onToggleThe
 
             Spacer(modifier = Modifier.height(40.dp))
 
+            // OPTIONS
             Column(modifier = Modifier.fillMaxWidth()) {
-                ProfileOptionItem(Icons.Default.Settings, "Account Settings")
-                ProfileOptionItem(Icons.Default.Favorite, "Favorite Genres")
-                ProfileOptionItem(Icons.Default.ExitToApp, "Sign Out") {
-                    navController.navigate(Screen.Login.route) {
-                        popUpTo(0)
-                    }
-                }
+                ProfileOptionItem(Icons.Default.Settings, "Account Settings") { onSettingsClick() }
+                ProfileOptionItem(Icons.Default.ExitToApp, "Sign Out") { onLogoutClick() }
             }
         }
     }
@@ -173,6 +178,6 @@ fun ProfileOptionItem(icon: ImageVector, title: String, onClick: () -> Unit = {}
 fun DefaultPreview() {
     FrontendTheme {
         val navController = rememberNavController()
-        ProfileScreen(navController, true, {})
+        ProfileScreen(ProfileUiState(), {}, {}, {})
     }
 }
