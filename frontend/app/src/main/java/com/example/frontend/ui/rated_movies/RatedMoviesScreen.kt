@@ -1,5 +1,6 @@
 package com.example.frontend.ui.rated_movies
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,20 +25,26 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.frontend.Screen
-import com.example.frontend.ui.components.MovieListItem
+import com.example.frontend.ui.components.RatedMovieListItem
+import com.example.frontend.ui.components.WatchlistItem
 import com.example.frontend.ui.data.MovieRepo
 import com.example.frontend.ui.theme.FrontendTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RatedMoviesScreen(navController: NavController) {
-    var searchQuery by remember { mutableStateOf("") }
+fun RatedMoviesScreen(
+    state: RatedMoviesUiState,
+    onSearchChanged: (String) -> Unit,
+    onMovieClick: (String) -> Unit
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -45,24 +52,23 @@ fun RatedMoviesScreen(navController: NavController) {
                     Text(
                         "RATED MOVIES",
                         color = MaterialTheme.colorScheme.primary,
-                        style = MaterialTheme.typography.titleLarge
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold
                     )
-                },
-                actions = {
-                    //TODO
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
             )
         }
     ) { padding ->
         Column(modifier = Modifier.padding(padding)) {
+            // SEARCH FIELD
             OutlinedTextField(
-                value = searchQuery,
-                onValueChange = { searchQuery = it },
+                value = state.searchQuery,
+                onValueChange = onSearchChanged,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                placeholder = { Text("Search for a movie...") },
+                placeholder = { Text("Search your rated movies...") },
                 leadingIcon = {
                     Icon(
                         Icons.Default.Search,
@@ -71,15 +77,29 @@ fun RatedMoviesScreen(navController: NavController) {
                     )
                 },
                 shape = RoundedCornerShape(12.dp),
-                colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = MaterialTheme.colorScheme.primary)
+                singleLine = true,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.surface
+                )
             )
-            LazyColumn (
-                contentPadding = PaddingValues(8.dp),
-                modifier = Modifier.fillMaxSize()
-            ) {
-                items(MovieRepo.dummyMovies) { movie ->
-                    MovieListItem(movie) {
-                        navController.navigate(Screen.Details.createRoute(movie.id))
+
+            // LIST
+            if (state.items.isEmpty()) {
+                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text("No rated movies yet", color = MaterialTheme.colorScheme.secondary)
+                }
+            } else {
+                LazyColumn(
+                    contentPadding = PaddingValues(8.dp),
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(state.items) { item ->
+                        RatedMovieListItem(
+                            movie = item.movie,
+                            rating = item.rating,
+                            onClick = { onMovieClick(item.movie.id) }
+                        )
                     }
                 }
             }
@@ -92,6 +112,6 @@ fun RatedMoviesScreen(navController: NavController) {
 fun DefaultPreview() {
     FrontendTheme {
         val navController = rememberNavController()
-        RatedMoviesScreen(navController)
+        RatedMoviesScreen(RatedMoviesUiState(), {}, {})
     }
 }

@@ -15,10 +15,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.frontend.ui.components.NavBar
 import com.example.frontend.ui.login.LoginScreen
 import com.example.frontend.ui.movie_details.MovieDetailsScreen
@@ -34,7 +36,10 @@ sealed class Screen(val route: String){
     object Login : Screen("login")
     object  Register : Screen("register")
     object Home : Screen("home")
-    object Details : Screen("details/{movieId}"){
+    object Details : Screen("details/{movieId}") {
+        val arguments = listOf(
+            navArgument("movieId") { type = NavType.StringType }
+        )
         fun createRoute(movieId: String) = "details/$movieId"
     }
     object Rated : Screen("rated")

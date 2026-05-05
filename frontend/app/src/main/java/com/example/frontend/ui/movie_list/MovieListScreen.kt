@@ -1,5 +1,6 @@
 package com.example.frontend.ui.movie_list
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,80 +12,61 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.example.frontend.Screen
 import com.example.frontend.ui.components.MovieGridItem
-import com.example.frontend.ui.data.MovieRepo
 import com.example.frontend.ui.theme.FrontendTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MovieListScreen(navController: NavController) {
-    var searchQuery by remember { mutableStateOf("") }
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        "MOVIES",
-                        color = MaterialTheme.colorScheme.primary,
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                },
-                actions = {
-                    //TODO
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
-            )
+fun MovieListScreen(
+    state: MovieListUiState,
+    onMovieClick: (String) -> Unit,
+    onSearchChanged: (String) -> Unit
+) {
+    if (state.isLoading) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
         }
-    ) { padding ->
-        Column(modifier = Modifier.padding(padding)) {
-            OutlinedTextField(
-                value = searchQuery,
-                onValueChange = { searchQuery = it },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                placeholder = { Text("Search for a movie...") },
-                leadingIcon = {
-                    Icon(
-                        Icons.Default.Search,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                },
-                shape = RoundedCornerShape(12.dp),
-                colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = MaterialTheme.colorScheme.primary)
-            )
+    }
 
+    Column(modifier = Modifier.fillMaxSize()) {
+        OutlinedTextField(
+            value = state.searchQuery,
+            onValueChange = onSearchChanged,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            placeholder = { Text("Search for movies...", color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)) },
+            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
+            singleLine = true,
+            shape = RoundedCornerShape(12.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.surface
+            )
+        )
+
+
+        if (state.movies.isEmpty() && !state.isLoading) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text("No movies found :(", color = MaterialTheme.colorScheme.onBackground)
+            }
+        } else {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(3),
-                contentPadding = PaddingValues(8.dp),
-                modifier = Modifier.fillMaxSize()
+                contentPadding = PaddingValues(8.dp)
             ) {
-                items(MovieRepo.dummyMovies) { movie ->
-                    MovieGridItem(movie) {
-                        navController.navigate(Screen.Details.createRoute(movie.id))
-                    }
+                items(state.movies) { movie ->
+                    MovieGridItem(movie) { onMovieClick(movie.id) }
                 }
             }
         }
@@ -95,7 +77,6 @@ fun MovieListScreen(navController: NavController) {
 @Composable
 fun DefaultPreview() {
     FrontendTheme {
-        val navController = rememberNavController()
-        MovieListScreen(navController)
+        MovieListScreen(MovieListUiState(),{}, {})
     }
 }

@@ -21,7 +21,7 @@ import coil.compose.AsyncImage
 import com.example.frontend.ui.data.Movie
 
 @Composable
-fun MovieListItem(movie: Movie, onClick: () -> Unit){
+fun WatchlistItem(movie: Movie, dateAdded: String, onClick: () -> Unit){
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -48,7 +48,7 @@ fun MovieListItem(movie: Movie, onClick: () -> Unit){
                     color = MaterialTheme.colorScheme.secondary
                 )
                 Text(
-                    text = "Added May 4th 2026",
+                    text = "Date added: $dateAdded",
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
                 )
