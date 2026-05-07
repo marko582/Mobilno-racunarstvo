@@ -37,7 +37,7 @@ import com.example.frontend.ui.theme.FrontendTheme
 fun WatchlistScreen(
     state: WatchlistUiState,
     onSearchChanged: (String) -> Unit,
-    onMovieClick: (String) -> Unit
+    onMovieClick: (Long) -> Unit
 ) {
     Scaffold(
         topBar = {

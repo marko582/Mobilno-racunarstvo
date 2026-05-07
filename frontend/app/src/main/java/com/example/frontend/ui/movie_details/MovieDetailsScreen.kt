@@ -50,7 +50,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.frontend.ui.data.commentRepo
+import com.example.frontend.ui.data.Comment
 import com.example.frontend.ui.theme.FrontendTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -113,7 +113,7 @@ fun MovieDetailsScreen(
                     // --- POSTER SECTION ---
                     Box(modifier = Modifier.fillMaxWidth().height(400.dp)) {
                         AsyncImage(
-                            model = movie.posterUrl,
+                            model = movie.imageUrl,
                             contentDescription = null,
                             modifier = Modifier.fillMaxSize(),
                             contentScale = ContentScale.Crop
@@ -149,7 +149,7 @@ fun MovieDetailsScreen(
                         Divider(modifier = Modifier.padding(vertical = 16.dp), color = MaterialTheme.colorScheme.onBackground.copy(0.2f))
 
                         Text(
-                            text = "Dune: Part Two will explore the mythic journey of Paul Atreides...", //TODO MOVIE DESCRIPTION
+                            text = movie.description ?: "",
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurface,
                             lineHeight = 24.sp
@@ -199,7 +199,7 @@ fun MovieDetailsScreen(
                         )
                         Spacer(modifier = Modifier.height(12.dp))
 
-                        commentRepo.dummyComments.forEach { comment ->
+                        state.comments.forEach { comment ->
                             Column(
                                 modifier = Modifier
                                     .fillMaxWidth()

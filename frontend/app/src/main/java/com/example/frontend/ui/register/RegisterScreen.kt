@@ -32,6 +32,8 @@ import com.example.frontend.ui.theme.FrontendTheme
 @Composable
 fun RegisterScreen(
     state: RegisterUiState,
+    onFirstNameChange: (String) -> Unit,
+    onLastNameChange: (String) -> Unit,
     onUsernameChange: (String) -> Unit,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
@@ -59,6 +61,40 @@ fun RegisterScreen(
             )
 
             OutlinedTextField(
+                value = state.firstName,
+                onValueChange = onFirstNameChange,
+                label = {Text("First name")},
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
+                    focusedLabelColor = MaterialTheme.colorScheme.primary,
+                    cursorColor = MaterialTheme.colorScheme.primary
+                ),
+                enabled = !state.isLoading
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            OutlinedTextField(
+                value = state.lastName,
+                onValueChange = onLastNameChange,
+                label = {Text("Last name")},
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
+                    focusedLabelColor = MaterialTheme.colorScheme.primary,
+                    cursorColor = MaterialTheme.colorScheme.primary
+                ),
+                enabled = !state.isLoading
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            OutlinedTextField(
                 value = state.username,
                 onValueChange = onUsernameChange,
                 label = {Text("Username")},
@@ -73,7 +109,7 @@ fun RegisterScreen(
                 enabled = !state.isLoading
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedTextField(
                 value = state.email,
@@ -90,7 +126,7 @@ fun RegisterScreen(
                 enabled = !state.isLoading
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedTextField(
                 value = state.password,
@@ -107,7 +143,7 @@ fun RegisterScreen(
                 enabled = !state.isLoading
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedTextField(
                 value = state.confirmPassword,
@@ -153,6 +189,6 @@ fun RegisterScreen(
 fun DefaultPreview() {
     FrontendTheme {
         val navController = rememberNavController()
-        RegisterScreen(RegisterUiState(), {},{}, {},{},{}, {})
+        RegisterScreen(RegisterUiState(), {}, {}, {},{}, {},{},{}, {})
     }
 }

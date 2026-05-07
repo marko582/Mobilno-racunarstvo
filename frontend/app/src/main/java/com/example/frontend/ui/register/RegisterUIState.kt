@@ -1,6 +1,8 @@
 package com.example.frontend.ui.register
 
 data class RegisterUiState(
+    val firstName: String = "",
+    val lastName: String = "",
     val username: String = "",
     val email: String = "",
     val password: String = "",

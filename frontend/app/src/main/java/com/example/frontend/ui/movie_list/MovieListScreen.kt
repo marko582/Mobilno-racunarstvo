@@ -29,7 +29,7 @@ import com.example.frontend.ui.theme.FrontendTheme
 @Composable
 fun MovieListScreen(
     state: MovieListUiState,
-    onMovieClick: (String) -> Unit,
+    onMovieClick: (Long) -> Unit,
     onSearchChanged: (String) -> Unit
 ) {
     if (state.isLoading) {

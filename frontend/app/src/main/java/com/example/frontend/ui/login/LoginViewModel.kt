@@ -2,7 +2,7 @@ package com.example.frontend.ui.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.delay
+import com.example.frontend.data.AppGraph
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,8 +13,8 @@ class LoginViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
-    fun onEmailChange(newValue: String) {
-        _uiState.update { it.copy(email = newValue, error = null) }
+    fun onUsernameChange(newValue: String) {
+        _uiState.update { it.copy(username = newValue, error = null) }
     }
 
     fun onPasswordChange(newValue: String) {
@@ -22,10 +22,10 @@ class LoginViewModel : ViewModel() {
     }
 
     fun onLoginClick() {
-        val currentEmail = _uiState.value.email
+        val currentUsername = _uiState.value.username
         val currentPassword = _uiState.value.password
 
-        if (currentEmail.isBlank() || currentPassword.isBlank()) {
+        if (currentUsername.isBlank() || currentPassword.isBlank()) {
             _uiState.update { it.copy(error = "Please fill both fields") }
             return
         }
@@ -33,12 +33,11 @@ class LoginViewModel : ViewModel() {
         _uiState.update { it.copy(isLoading = true) }
 
         viewModelScope.launch {
-            delay(1500)
-
-            if (currentEmail == "admin" && currentPassword == "admin") {
+            try {
+                AppGraph.repository.login(username = currentUsername, password = currentPassword)
                 _uiState.update { it.copy(isLoading = false, isLoginSuccess = true) }
-            } else {
-                _uiState.update { it.copy(isLoading = false, error = "Wrong email or password") }
+            } catch (e: Exception) {
+                _uiState.update { it.copy(isLoading = false, error = e.message ?: "Login failed") }
             }
         }
     }

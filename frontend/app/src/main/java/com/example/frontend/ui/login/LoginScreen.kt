@@ -35,7 +35,7 @@ import com.example.frontend.ui.theme.FrontendTheme
 @Composable
 fun LoginScreen(
     state: LoginUiState,
-    onEmailChange: (String) -> Unit,
+    onUsernameChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onLoginClick: () -> Unit,
     onRegisterClick: () -> Unit
@@ -61,9 +61,9 @@ fun LoginScreen(
 
 
             OutlinedTextField(
-                value = state.email,
-                onValueChange = onEmailChange,
-                label = {Text("Email")},
+                value = state.username,
+                onValueChange = onUsernameChange,
+                label = {Text("Username")},
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 colors = OutlinedTextFieldDefaults.colors(

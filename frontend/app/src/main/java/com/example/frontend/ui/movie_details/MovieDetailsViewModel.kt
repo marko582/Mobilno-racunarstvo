@@ -2,7 +2,7 @@ package com.example.frontend.ui.movie_details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.frontend.ui.data.MovieRepo // Pretpostavka gde su ti podaci
+import com.example.frontend.data.AppGraph
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MovieDetailsViewModel(
-    private val movieId: String?
+    private val movieId: Long?
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MovieDetailsUiState())
@@ -27,45 +27,61 @@ class MovieDetailsViewModel(
             return
         }
 
-        _uiState.update { it.copy(isLoading = true) }
-
         viewModelScope.launch {
-            delay(1000)
-
-            val foundMovie = MovieRepo.dummyMovies.find { it.id == movieId }
-
-            if (foundMovie != null) {
+            _uiState.update { it.copy(isLoading = true, error = null) }
+            try {
+                val movie = AppGraph.repository.getMovie(movieId)
+                val comments = AppGraph.repository.listComments(movieId)
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        movie = foundMovie,
-                        isInWatchlist = false,
-                        userRating = 0
+                        movie = movie,
+                        comments = comments
                     )
                 }
-            } else {
-                _uiState.update {
-                    it.copy(isLoading = false, error = "Movie not found")
-                }
+            } catch (e: Exception) {
+                _uiState.update { it.copy(isLoading = false, error = e.message ?: "Failed to load details") }
             }
         }
     }
 
     fun toggleWatchlist() {
-        _uiState.update { currentState ->
-            currentState.copy(isInWatchlist = !currentState.isInWatchlist)
+        val id = movieId ?: return
+        viewModelScope.launch {
+            val target = !_uiState.value.isInWatchlist
+            try {
+                AppGraph.repository.toggleWatchlist(movieId = id, add = target)
+                _uiState.update { it.copy(isInWatchlist = target) }
+                // ensure we show fresh comments/details if needed later
+            } catch (e: Exception) {
+                _uiState.update { it.copy(error = e.message ?: "Watchlist update failed") }
+            }
         }
     }
 
     fun updateRating(newRating: Int) {
-        _uiState.update { it.copy(userRating = newRating) }
+        val id = movieId ?: return
+        viewModelScope.launch {
+            try {
+                val stars = AppGraph.repository.rate(movieId = id, stars = newRating)
+                _uiState.update { it.copy(userRating = stars) }
+            } catch (e: Exception) {
+                _uiState.update { it.copy(error = e.message ?: "Rating failed") }
+            }
+        }
     }
 
     fun postComment(text: String) {
         if (text.isBlank()) return
+        val id = movieId ?: return
 
         viewModelScope.launch {
-            //TODO
+            try {
+                val created = AppGraph.repository.addComment(movieId = id, text = text)
+                _uiState.update { it.copy(comments = listOf(created) + it.comments) }
+            } catch (e: Exception) {
+                _uiState.update { it.copy(error = e.message ?: "Comment failed") }
+            }
         }
     }
 }

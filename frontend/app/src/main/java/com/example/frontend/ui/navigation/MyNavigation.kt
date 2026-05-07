@@ -18,6 +18,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.frontend.Screen
+import com.example.frontend.ui.account_settings.AccountSettingsScreen
+import com.example.frontend.ui.account_settings.AccountSettingsViewModel
 import com.example.frontend.ui.login.LoginScreen
 import com.example.frontend.ui.login.LoginViewModel
 import com.example.frontend.ui.movie_details.MovieDetailsScreen
@@ -30,6 +32,7 @@ import com.example.frontend.ui.rated_movies.RatedMoviesScreen
 import com.example.frontend.ui.rated_movies.RatedMoviesViewModel
 import com.example.frontend.ui.register.RegisterScreen
 import com.example.frontend.ui.register.RegisterViewModel
+import com.example.frontend.ui.util.OnResumeEffect
 import com.example.frontend.ui.watchlist.WatchlistScreen
 import com.example.frontend.ui.watchlist.WatchlistViewModel
 
@@ -60,7 +63,7 @@ fun MyNavigation(isDarkMode: Boolean, onToggleTheme: ()-> Unit, navController: N
 
             LoginScreen(
                 state = state,
-                onEmailChange = viewModel::onEmailChange,
+                onUsernameChange = viewModel::onUsernameChange,
                 onPasswordChange = viewModel::onPasswordChange,
                 onLoginClick = viewModel::onLoginClick,
                 onRegisterClick = { navController.navigate(Screen.Register.route) }
@@ -82,6 +85,8 @@ fun MyNavigation(isDarkMode: Boolean, onToggleTheme: ()-> Unit, navController: N
 
             RegisterScreen(
                 state = state,
+                onFirstNameChange = viewModel::onFirstNameChange,
+                onLastNameChange = viewModel::onLastNameChange,
                 onUsernameChange = viewModel::onUsernameChange,
                 onEmailChange = viewModel::onEmailChange,
                 onPasswordChange = viewModel::onPasswordChange,
@@ -110,7 +115,7 @@ fun MyNavigation(isDarkMode: Boolean, onToggleTheme: ()-> Unit, navController: N
             route = Screen.Details.route,
             arguments = Screen.Details.arguments
         ) { backStackEntry ->
-            val movieId = backStackEntry.arguments?.getString("movieId")
+            val movieId = backStackEntry.arguments?.getLong("movieId")
 
             val viewModel: MovieDetailsViewModel = viewModel(
                 factory = object : ViewModelProvider.Factory {
@@ -144,6 +149,7 @@ fun MyNavigation(isDarkMode: Boolean, onToggleTheme: ()-> Unit, navController: N
             val viewModel: RatedMoviesViewModel = viewModel()
             val state by viewModel.uiState.collectAsStateWithLifecycle()
 
+            OnResumeEffect { viewModel.reload() }
             RatedMoviesScreen(
                 state = state,
                 onSearchChanged = { query -> viewModel.onSearchQueryChanged(query) },
@@ -158,6 +164,7 @@ fun MyNavigation(isDarkMode: Boolean, onToggleTheme: ()-> Unit, navController: N
             val viewModel: WatchlistViewModel = viewModel()
             val state by viewModel.uiState.collectAsStateWithLifecycle()
 
+            OnResumeEffect { viewModel.reload() }
             WatchlistScreen(
                 state = state,
                 onSearchChanged = { query -> viewModel.onSearchQueryChanged(query) },
@@ -172,6 +179,7 @@ fun MyNavigation(isDarkMode: Boolean, onToggleTheme: ()-> Unit, navController: N
             val viewModel: ProfileViewModel = viewModel()
             val state by viewModel.uiState.collectAsStateWithLifecycle()
 
+            OnResumeEffect { viewModel.reload() }
             ProfileScreen(
                 state = state,
                 onToggleTheme = {
@@ -181,7 +189,23 @@ fun MyNavigation(isDarkMode: Boolean, onToggleTheme: ()-> Unit, navController: N
                     navController.navigate(Screen.Login.route) {
                         popUpTo(0)
                     }
-                }
+                },
+                onSettingsClick = { navController.navigate(Screen.AccountSettings.route) }
+            )
+        }
+
+        composable(Screen.AccountSettings.route) {
+            val viewModel: AccountSettingsViewModel = viewModel()
+            val state by viewModel.uiState.collectAsStateWithLifecycle()
+
+            AccountSettingsScreen(
+                state = state,
+                onBack = { navController.popBackStack() },
+                onFirstNameChange = viewModel::onFirstNameChange,
+                onLastNameChange = viewModel::onLastNameChange,
+                onUsernameChange = viewModel::onUsernameChange,
+                onEmailChange = viewModel::onEmailChange,
+                onSave = viewModel::onSave
             )
         }
     }

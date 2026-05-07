@@ -2,7 +2,7 @@ package com.example.frontend.ui.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.delay
+import com.example.frontend.data.AppGraph
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -13,22 +13,28 @@ class ProfileViewModel : ViewModel() {
     val uiState = _uiState.asStateFlow()
 
     init {
-        loadUserProfile()
+        reload()
     }
 
-    private fun loadUserProfile() {
-        _uiState.update { it.copy(isLoading = true) }
+    fun reload() {
         viewModelScope.launch {
-            delay(800)
-            _uiState.update {
-                it.copy(
-                    username = "Mile Dizna",
-                    memberSince = "May 1977",
-                    moviesCount = "124",
-                    watchlistCount = "45",
-                    ratingsCount = "89",
-                    isLoading = false
-                )
+            _uiState.update { it.copy(isLoading = true, error = null) }
+            try {
+                val me = AppGraph.repository.me()
+                val watchlist = AppGraph.repository.listWatchlist()
+                val ratings = AppGraph.repository.myRatings()
+
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        username = me.username,
+                        email = me.email.orEmpty(),
+                        watchlistCount = watchlist.size.toString(),
+                        ratingsCount = ratings.size.toString()
+                    )
+                }
+            } catch (e: Exception) {
+                _uiState.update { it.copy(isLoading = false, error = e.message ?: "Failed to load profile") }
             }
         }
     }

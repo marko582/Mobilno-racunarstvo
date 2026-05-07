@@ -38,13 +38,14 @@ sealed class Screen(val route: String){
     object Home : Screen("home")
     object Details : Screen("details/{movieId}") {
         val arguments = listOf(
-            navArgument("movieId") { type = NavType.StringType }
+            navArgument("movieId") { type = NavType.LongType }
         )
-        fun createRoute(movieId: String) = "details/$movieId"
+        fun createRoute(movieId: Long) = "details/$movieId"
     }
     object Rated : Screen("rated")
     object Watchlist : Screen("watchlist")
     object Profile: Screen("profile")
+    object AccountSettings: Screen("account-settings")
 }
 
 class MainActivity : ComponentActivity() {

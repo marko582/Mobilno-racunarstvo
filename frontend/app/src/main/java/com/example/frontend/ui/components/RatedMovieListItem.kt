@@ -33,7 +33,7 @@ fun RatedMovieListItem(movie: Movie, rating: Int, onClick: () -> Unit){
     ) {
         Row(modifier = Modifier.padding(8.dp)) {
             AsyncImage(
-                model = movie.posterUrl,
+                model = movie.imageUrl,
                 contentDescription = null,
                 modifier = Modifier
                     .width(80.dp)

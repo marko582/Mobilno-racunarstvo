@@ -1,7 +1,7 @@
 package com.example.frontend.ui.login
 
 data class LoginUiState(
-    val email: String = "",
+    val username: String = "",
     val password: String = "",
     val isLoading: Boolean = false,
     val error: String? = null,

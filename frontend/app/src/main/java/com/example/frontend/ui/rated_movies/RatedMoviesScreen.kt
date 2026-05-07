@@ -30,12 +30,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.frontend.Screen
 import com.example.frontend.ui.components.RatedMovieListItem
-import com.example.frontend.ui.components.WatchlistItem
-import com.example.frontend.ui.data.MovieRepo
 import com.example.frontend.ui.theme.FrontendTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,7 +39,7 @@ import com.example.frontend.ui.theme.FrontendTheme
 fun RatedMoviesScreen(
     state: RatedMoviesUiState,
     onSearchChanged: (String) -> Unit,
-    onMovieClick: (String) -> Unit
+    onMovieClick: (Long) -> Unit
 ) {
     Scaffold(
         topBar = {

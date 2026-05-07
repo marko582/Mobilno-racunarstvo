@@ -34,9 +34,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.frontend.Screen
 import com.example.frontend.ui.theme.FrontendTheme
 
 @Composable
@@ -80,7 +78,7 @@ fun ProfileScreen(
             )
 
             Text(
-                text = "Member since: ${state.memberSince}",
+                text = state.email,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
             )
@@ -92,7 +90,6 @@ fun ProfileScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                StatItem("Movies", state.moviesCount)
                 StatItem("Watchlist", state.watchlistCount)
                 StatItem("Ratings", state.ratingsCount)
             }
