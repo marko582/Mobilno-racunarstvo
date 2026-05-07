@@ -186,8 +186,10 @@ fun MyNavigation(isDarkMode: Boolean, onToggleTheme: ()-> Unit, navController: N
                     viewModel.toggleTheme(onToggleTheme)
                 },
                 onLogoutClick = {
-                    navController.navigate(Screen.Login.route) {
-                        popUpTo(0)
+                    viewModel.logout {
+                        navController.navigate(Screen.Login.route) {
+                            popUpTo(0)
+                        }
                     }
                 },
                 onSettingsClick = { navController.navigate(Screen.AccountSettings.route) }

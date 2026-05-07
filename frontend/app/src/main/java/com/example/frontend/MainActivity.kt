@@ -21,6 +21,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.frontend.data.AppGraph
 import com.example.frontend.ui.components.NavBar
 import com.example.frontend.ui.login.LoginScreen
 import com.example.frontend.ui.movie_details.MovieDetailsScreen
@@ -51,6 +52,7 @@ sealed class Screen(val route: String){
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AppGraph.init(applicationContext)
         enableEdgeToEdge()
         setContent {
             var isDarkMode by remember { mutableStateOf(true) }

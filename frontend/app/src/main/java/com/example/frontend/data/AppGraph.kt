@@ -23,6 +23,8 @@ object AppGraph {
         private set
 
     fun init(context: Context) {
+        if (::repository.isInitialized) return
+
         tokenStore = TokenStore(context.applicationContext)
 
         val logging =

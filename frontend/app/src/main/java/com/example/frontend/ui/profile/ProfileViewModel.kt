@@ -43,4 +43,14 @@ class ProfileViewModel : ViewModel() {
         _uiState.update { it.copy(isDarkMode = !it.isDarkMode) }
         onToggle()
     }
+
+    fun logout(onDone: () -> Unit) {
+        viewModelScope.launch {
+            try {
+                AppGraph.repository.logout()
+            } finally {
+                onDone()
+            }
+        }
+    }
 }
